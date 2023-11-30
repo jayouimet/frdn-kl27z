@@ -1,0 +1,11 @@
+core_cm0plus.h:741:22:__NVIC_EnableIRQ	16	static
+fsl_clock.h:476:20:CLOCK_SetTpmClock	16	static
+fsl_common.h:484:28:EnableIRQ	16	static
+fsl_tpm.h:526:20:TPM_ClearStatusFlags	16	static
+fsl_tpm.h:574:20:TPM_SetTimerPeriod	16	static
+fsl_tpm.h:608:20:TPM_StartTimer	24	static
+fsl_gpio.h:162:20:GPIO_PinWrite	32	static
+affichage.c:14:6:init	32	static
+affichage.c:67:6:writeDigit	32	static
+affichage.c:96:6:TPM2_IRQHandler	8	static
+affichage.c:111:6:writeNumber	32	static

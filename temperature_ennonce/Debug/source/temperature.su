@@ -1,0 +1,10 @@
+../CMSIS/core_cm0plus.h:840:22:__NVIC_SetPriority	24	static
+../CMSIS/core_cm0plus.h:994:26:SysTick_Config	16	static
+../source/temperature.c:28:6:SysTick_Handler	8	static
+../source/temperature.c:41:6:SysTick_DelayTicks	16	static
+../source/temperature.c:52:6:BMP180_delay_msek	16	static
+../source/temperature.c:82:8:BMP180_I2C_bus_write	96	static
+../source/temperature.c:135:4:BMP180_I2C_bus_read	88	static
+../source/temperature.c:186:6:I2C_routine	8	static
+../source/temperature.c:199:5:bmp180_data_read	24	static
+../source/temperature.c:263:5:main	32	static

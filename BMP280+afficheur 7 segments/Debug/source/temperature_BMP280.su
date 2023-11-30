@@ -1,0 +1,11 @@
+core_cm0plus.h:840:22:__NVIC_SetPriority	24	static
+core_cm0plus.h:994:26:SysTick_Config	16	static
+fsl_gpio.h:155:20:GPIO_PinWrite	32	static
+temperature_BMP280.c:24:6:SysTick_Handler	8	static
+temperature_BMP280.c:32:6:SysTick_DelayTicks	16	static
+temperature_BMP280.c:84:6:BMP180_delay_msek	16	static
+temperature_BMP280.c:100:4:I2C_routine	8	static
+temperature_BMP280.c:118:4:BMP180_I2C_bus_write	96	static
+temperature_BMP280.c:164:4:BMP180_I2C_bus_read	88	static
+temperature_BMP280.c:206:5:bmp180_data_read	32	static
+temperature_BMP280.c:288:5:main	40	static

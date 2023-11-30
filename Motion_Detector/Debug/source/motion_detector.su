@@ -1,0 +1,7 @@
+core_cm0plus.h:733:22:__NVIC_EnableIRQ	16	static
+fsl_common.h:419:28:EnableIRQ	16	static
+fsl_port.h:415:20:PORT_SetPinInterruptConfig	24	static
+fsl_gpio.h:155:20:GPIO_PinWrite	32	static
+motion_detector.c:15:13:delay	16	static
+motion_detector.c:33:6:PORTA_IRQHandler	8	static
+motion_detector.c:43:5:main	16	static

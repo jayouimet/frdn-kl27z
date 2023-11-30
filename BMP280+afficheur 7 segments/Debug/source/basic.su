@@ -1,0 +1,10 @@
+core_cm0plus.h:840:22:__NVIC_SetPriority	24	static
+core_cm0plus.h:994:26:SysTick_Config	16	static
+basic.c:34:5:main	24	static
+basic.c:100:6:SysTick_Handler	8	static
+basic.c:109:6:delay_ms	16	static
+basic.c:130:8:i2c_reg_write	96	static
+basic.c:182:8:i2c_reg_read	88	static
+basic.c:232:8:spi_reg_write	24	static
+basic.c:252:8:spi_reg_read	24	static
+basic.c:267:6:print_rslt	16	static

@@ -1,0 +1,2 @@
+../drivers/fsl_clock.h:457:20:CLOCK_SetLpuart0Clock	16	static
+../board/boards/board.c:25:6:BOARD_InitDebugConsole	16	static
