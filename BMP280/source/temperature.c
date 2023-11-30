@@ -188,8 +188,8 @@ int8_t i2c_reg_write(uint8_t i2c_addr, uint8_t reg_addr, uint8_t *reg_data, uint
 		masterXfer.flags          = kI2C_TransferDefaultFlag;
 
 		for (stringpos = 0; stringpos < length; stringpos++) {
-				array[stringpos] = *(reg_data + stringpos);
-			}
+			array[stringpos] = *(reg_data + stringpos);
+		}
 
 		status = I2C_MasterTransferBlocking(I2C_MASTER_BASEADDR, &masterXfer);
 
@@ -241,13 +241,13 @@ int8_t i2c_reg_read(uint8_t i2c_addr, uint8_t reg_addr, uint8_t *reg_data, uint1
 		status = I2C_MasterTransferBlocking(I2C_MASTER_BASEADDR, &masterXfer);
 
 		if (status == kStatus_Success)
-			{
-				iError = 0;
-			}
-			else
-			{
-					iError = 2;  // Doit être revu ....
-			}
+		{
+			iError = 0;
+		}
+		else
+		{
+				iError = 2;  // Doit être revu ....
+		}
 
 		for (stringpos = 0; stringpos < length; stringpos++) {
 			*(reg_data + stringpos) = array[stringpos];
