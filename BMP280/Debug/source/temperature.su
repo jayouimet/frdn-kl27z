@@ -1,0 +1,10 @@
+D:\Universite\UQO\Automne 2023\Systemes embarques\Projet\frdn-kl27z\BMP280\CMSIS/core_cm0plus.h:850:22:__NVIC_SetPriority	24	static
+D:\Universite\UQO\Automne 2023\Systemes embarques\Projet\frdn-kl27z\BMP280\CMSIS/core_cm0plus.h:1056:26:SysTick_Config	16	static
+../source/temperature.c:38:5:main	120	static
+../source/temperature.c:140:6:SysTick_Handler	8	static
+../source/temperature.c:149:6:delay_ms	16	static
+../source/temperature.c:170:8:i2c_reg_write	96	static
+../source/temperature.c:222:8:i2c_reg_read	88	static
+../source/temperature.c:272:8:spi_reg_write	24	static
+../source/temperature.c:292:8:spi_reg_read	24	static
+../source/temperature.c:307:6:print_rslt	16	static

@@ -5,11 +5,11 @@
  * Generated linker script file for MKL27Z64xxx4
  * Created from linkscript.ldt by FMCreateLinkLibraries
  * Using Freemarker v2.3.30
- * MCUXpresso IDE v11.8.1 [Build 1197] [2023-10-27] on 29 nov. 2023, 20 h 46 min 22 s
+ * MCUXpresso IDE v11.8.1 [Build 1197] [2023-10-27] on 29 nov. 2023, 20 h 55 min 22 s
  */
 
-INCLUDE "temperature_ennonce_Debug_library.ld"
-INCLUDE "temperature_ennonce_Debug_memory.ld"
+INCLUDE "BMP280_Debug_library.ld"
+INCLUDE "BMP280_Debug_memory.ld"
 
 ENTRY(ResetISR)
 

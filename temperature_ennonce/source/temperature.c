@@ -113,7 +113,7 @@ int8_t BMP180_I2C_bus_write(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt)
 	if (status == kStatus_Success) {
 		iError = 0;
 	} else {
-		iError = 2;
+		iError = status;
 	}
 
 	PRINTF("Write Status : %d", iError);
@@ -162,7 +162,7 @@ s8 BMP180_I2C_bus_read(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt)
 	if (status == kStatus_Success) {
 		iError = 0;
 	} else {
-		iError = 2;
+		iError = status;
 	}
 
 	for (stringpos = 0; stringpos < cnt; stringpos++) {

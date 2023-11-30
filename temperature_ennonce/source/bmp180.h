@@ -184,7 +184,61 @@ BMP180_BUS_WR_PARAM_TYPE to function calls used inside the API
 /**\name	I2C ADDRESS DEFINITION OF BMP180       */
 /***************************************************************/
 /*BMP180 I2C Address*/
-#define BMP180_I2C_ADDR		(0xEE>>1)
+#define
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(0xEE>>1)
 
 /***************************************************************/
 /**\name	ERROR CODE DEFINITIONS    */
