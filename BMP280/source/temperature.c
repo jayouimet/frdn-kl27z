@@ -114,23 +114,6 @@ int main(void)
     return 0;
 }
 
-/*!
- *  @brief Function that creates a mandatory delay required in some of the APIs such as "bmg250_soft_reset",
- *      "bmg250_set_foc", "bmg250_perform_self_test"  and so on.
- *
- *  @param[in] period_ms  : the required wait time in milliseconds.
- *  @return void.
- *
- */
-void SysTick_Handler(void)
-{
-    if (g_systickCounter != 0U)
-    {
-        g_systickCounter--;
-    }
-}
-
-
 void delay_ms(uint32_t period_ms)
 {
 	g_systickCounter = period_ms;
