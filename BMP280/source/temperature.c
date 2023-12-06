@@ -1,6 +1,6 @@
 
 /*
- * affichage.c
+ * temperature.c
  *
  *  Dec. 6, 2023
  *  Original file : Bosch
