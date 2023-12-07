@@ -1,10 +1,10 @@
 
 /*
- * affichage.c
+ * temperature.c
  *
- *  Nov. 25, 2020
+ *  Dec. 6, 2023
  *  Original file : Bosch
- *  Modified by : kamel adi
+ *  Modified by : Jeremie Ouimet
  */
 
 #include <stdio.h>
@@ -24,15 +24,12 @@
 
 #define I2C_MASTER_BASEADDR I2C0
 #define	I2C_BUFFER_LEN 25
-struct bmp280_dev bmp;
 
 volatile uint32_t g_systickCounter;
 
 void delay_ms(uint32_t period_ms);
 int8_t i2c_reg_write(uint8_t i2c_addr, uint8_t reg_addr, uint8_t *reg_data, uint16_t length);
 int8_t i2c_reg_read(uint8_t i2c_addr, uint8_t reg_addr, uint8_t *reg_data, uint16_t length);
-int8_t spi_reg_write(uint8_t cs, uint8_t reg_addr, uint8_t *reg_data, uint16_t length);
-int8_t spi_reg_read(uint8_t cs, uint8_t reg_addr, uint8_t *reg_data, uint16_t length);
 void print_rslt(const char api_name[], int8_t rslt);
 
 int main(void)
@@ -54,16 +51,14 @@ int main(void)
    /* Set systick reload value to generate 1ms interrupt */
     if (SysTick_Config(SystemCoreClock / 1000U))
     {
-     PRINTF("Echec dans l'initialisation du systick\n");
+     	PRINTF("Echec dans l'initialisation du systick\n");
     }
-    //I2C_MasterInit(I2C_MASTER_BASEADDR, &config, CLOCK_GetFreq(I2C0_CLK_SRC));
-
 
     /* Map the delay function pointer with the function responsible for implementing the delay */
     bmp.delay_ms = delay_ms;
 
     /* Assign device I2C address based on the status of SDO pin (GND for PRIMARY(0x76) & VDD for SECONDARY(0x77)) */
-    bmp.dev_id = BMP280_I2C_ADDR_PRIM; //BMP280_I2C_ADDR_SEC; //BMP280_I2C_ADDR_PRIM;
+    bmp.dev_id = BMP280_I2C_ADDR_PRIM;
 
     /* Select the interface mode as I2C */
     bmp.intf = BMP280_I2C_INTF;
@@ -73,13 +68,6 @@ int main(void)
     bmp.write = i2c_reg_write;
 
     /* To enable SPI interface: comment the above 4 lines and uncomment the below 4 lines */
-
-    /*
-     * bmp.dev_id = 0;
-     * bmp.read = spi_reg_read;
-     * bmp.write = spi_reg_write;
-     * bmp.intf = BMP280_SPI_INTF;
-     */
     rslt = bmp280_init(&bmp);
     print_rslt(" bmp280_init status", rslt);
 
@@ -95,9 +83,6 @@ int main(void)
 
     /* Temperature oversampling set at 4x */
     conf.os_temp = BMP280_OS_4X;
-
-    /* Pressure over sampling none (disabling pressure measurement) */
-    //conf.os_pres = BMP280_OS_NONE;
 
     /* Setting the output data rate as 1HZ(1000ms) */
     conf.odr = BMP280_ODR_1000_MS;
@@ -115,36 +100,15 @@ int main(void)
         /* Reading the raw data from sensor */
         rslt = bmp280_get_uncomp_data(&ucomp_data, &bmp);
 
-        /* Getting the 32 bit compensated temperature */
-        rslt = bmp280_get_comp_temp_32bit(&temp32, ucomp_data.uncomp_temp, &bmp);
-
         /* Getting the compensated temperature as floating point value */
         rslt = bmp280_get_comp_temp_double(&temp, ucomp_data.uncomp_temp, &bmp);
-        printf("UT: %ld, T32: %ld, T: %f \r\n", ucomp_data.uncomp_temp, temp32, temp);
-        //writeNumber((float)temp);
+        printf("Temperature: %f \r\n", temp);
         /* Sleep time between measurements = BMP280_ODR_1000_MS */
         bmp.delay_ms(1000);
     }
 
     return 0;
 }
-
-/*!
- *  @brief Function that creates a mandatory delay required in some of the APIs such as "bmg250_soft_reset",
- *      "bmg250_set_foc", "bmg250_perform_self_test"  and so on.
- *
- *  @param[in] period_ms  : the required wait time in milliseconds.
- *  @return void.
- *
- */
-void SysTick_Handler(void)
-{
-    if (g_systickCounter != 0U)
-    {
-        g_systickCounter--;
-    }
-}
-
 
 void delay_ms(uint32_t period_ms)
 {
@@ -169,40 +133,29 @@ void delay_ms(uint32_t period_ms)
  */
 int8_t i2c_reg_write(uint8_t i2c_addr, uint8_t reg_addr, uint8_t *reg_data, uint16_t length)
 {
-	status_t status;
+	uint32_t iError = 0;
+	uint8_t array[I2C_BUFFER_LEN]= {0};
+	uint8_t stringpos = 0;
+	array[0] = reg_addr;
 
-		uint32_t iError = 0;
-		uint8_t array[I2C_BUFFER_LEN]= {0};
-		uint8_t stringpos = 0;
-		array[0] = reg_addr;
+	i2c_master_transfer_t masterXfer;
+    	memset(&masterXfer, 0, sizeof(masterXfer));
 
-		i2c_master_transfer_t masterXfer;
-	    memset(&masterXfer, 0, sizeof(masterXfer));
+	masterXfer.slaveAddress   = i2c_addr;
+	masterXfer.direction      = kI2C_Write;
+	masterXfer.subaddress     = reg_addr;
+	masterXfer.subaddressSize = 1;
+	masterXfer.data           = &array[0];
+	masterXfer.dataSize       = length;
+	masterXfer.flags          = kI2C_TransferDefaultFlag;
 
-		masterXfer.slaveAddress   = i2c_addr;
-		masterXfer.direction      = kI2C_Write;
-		masterXfer.subaddress     = reg_addr;
-		masterXfer.subaddressSize = 1;
-		masterXfer.data           = &array[0];
-		masterXfer.dataSize       = length;
-		masterXfer.flags          = kI2C_TransferDefaultFlag;
+	for (stringpos = 0; stringpos < length; stringpos++) {
+		array[stringpos] = *(reg_data + stringpos);
+	}
 
-		for (stringpos = 0; stringpos < length; stringpos++) {
-			array[stringpos] = *(reg_data + stringpos);
-		}
+	iError = I2C_MasterTransferBlocking(I2C_MASTER_BASEADDR, &masterXfer);
 
-		status = I2C_MasterTransferBlocking(I2C_MASTER_BASEADDR, &masterXfer);
-
-		if (status == kStatus_Success)
-		{
-			iError = 0;
-		}
-		else
-		{
-				iError = 2;  // Doit être revu ....
-		}
-
-		return (uint8_t)iError;
+	return (uint8_t)iError;
 
 }
 
@@ -221,79 +174,28 @@ int8_t i2c_reg_write(uint8_t i2c_addr, uint8_t reg_addr, uint8_t *reg_data, uint
  */
 int8_t i2c_reg_read(uint8_t i2c_addr, uint8_t reg_addr, uint8_t *reg_data, uint16_t length)
 {
+	uint32_t iError = 0;
+	uint8_t array[I2C_BUFFER_LEN] = {0};
+	uint8_t stringpos = 0;
+	array[0] = reg_addr;
+	i2c_master_transfer_t masterXfer;
 
-		status_t status;
-		uint32_t iError = 0;
-		uint8_t array[I2C_BUFFER_LEN] = {0};
-		uint8_t stringpos = 0;
-		array[0] = reg_addr;
-		i2c_master_transfer_t masterXfer;
+	memset(&masterXfer, 0, sizeof(masterXfer));
+	masterXfer.slaveAddress   = i2c_addr;
+	masterXfer.direction      = kI2C_Read;
+	masterXfer.subaddress     = reg_addr;
+	masterXfer.subaddressSize = 1;
+	masterXfer.data           = array;
+	masterXfer.dataSize       = length;
+	masterXfer.flags          = kI2C_TransferDefaultFlag;
 
-		memset(&masterXfer, 0, sizeof(masterXfer));
-		masterXfer.slaveAddress   = i2c_addr;
-		masterXfer.direction      = kI2C_Read;
-		masterXfer.subaddress     = reg_addr;
-		masterXfer.subaddressSize = 1;
-		masterXfer.data           = array;
-		masterXfer.dataSize       = length;
-		masterXfer.flags          = kI2C_TransferDefaultFlag;
+	iError = I2C_MasterTransferBlocking(I2C_MASTER_BASEADDR, &masterXfer);
 
-		status = I2C_MasterTransferBlocking(I2C_MASTER_BASEADDR, &masterXfer);
+	for (stringpos = 0; stringpos < length; stringpos++) {
+		*(reg_data + stringpos) = array[stringpos];
+	}
 
-		if (status == kStatus_Success)
-		{
-			iError = 0;
-		}
-		else
-		{
-				iError = 2;  // Doit être revu ....
-		}
-
-		for (stringpos = 0; stringpos < length; stringpos++) {
-			*(reg_data + stringpos) = array[stringpos];
-		}
-
-		return (uint8_t)iError;
-}
-
-/*!
- *  @brief Function for writing the sensor's registers through SPI bus.
- *
- *  @param[in] cs           : Chip select to enable the sensor.
- *  @param[in] reg_addr     : Register address.
- *  @param[in] reg_data : Pointer to the data buffer whose data has to be written.
- *  @param[in] length       : No of bytes to write.
- *
- *  @return Status of execution
- *  @retval 0 -> Success
- *  @retval >0 -> Failure Info
- *
- */
-int8_t spi_reg_write(uint8_t cs, uint8_t reg_addr, uint8_t *reg_data, uint16_t length)
-{
-
-    /* Implement the SPI write routine according to the target machine. */
-    return -1;
-}
-
-/*!
- *  @brief Function for reading the sensor's registers through SPI bus.
- *
- *  @param[in] cs       : Chip select to enable the sensor.
- *  @param[in] reg_addr : Register address.
- *  @param[out] reg_data    : Pointer to the data buffer to store the read data.
- *  @param[in] length   : No of bytes to read.
- *
- *  @return Status of execution
- *  @retval 0 -> Success
- *  @retval >0 -> Failure Info
- *
- */
-int8_t spi_reg_read(uint8_t cs, uint8_t reg_addr, uint8_t *reg_data, uint16_t length)
-{
-
-    /* Implement the SPI read routine according to the target machine. */
-    return -1;
+	return (uint8_t)iError;
 }
 
 /*!
