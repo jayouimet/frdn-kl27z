@@ -24,7 +24,6 @@
 
 #define I2C_MASTER_BASEADDR I2C0
 #define	I2C_BUFFER_LEN 25
-struct bmp280_dev bmp;
 
 volatile uint32_t g_systickCounter;
 
