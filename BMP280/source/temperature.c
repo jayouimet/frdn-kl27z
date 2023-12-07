@@ -100,12 +100,9 @@ int main(void)
         /* Reading the raw data from sensor */
         rslt = bmp280_get_uncomp_data(&ucomp_data, &bmp);
 
-        /* Getting the 32 bit compensated temperature */
-        rslt = bmp280_get_comp_temp_32bit(&temp32, ucomp_data.uncomp_temp, &bmp);
-
         /* Getting the compensated temperature as floating point value */
         rslt = bmp280_get_comp_temp_double(&temp, ucomp_data.uncomp_temp, &bmp);
-        printf("UT: %ld, T32: %ld, T: %f \r\n", ucomp_data.uncomp_temp, temp32, temp);
+        printf("Temperature: %f \r\n", temp);
         /* Sleep time between measurements = BMP280_ODR_1000_MS */
         bmp.delay_ms(1000);
     }
